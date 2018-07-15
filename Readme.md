@@ -36,7 +36,7 @@ contains a total of 981 facial expressions. we use 10-fold Cross validation in t
 ### Train and Eval model for a fold ###
 - python mainpro_CK+.py --model VGG19 --bs 128 --lr 0.01 --fold 1
 
-## Train and Eval model for all 10 fold ###
+### Train and Eval model for all 10 fold ###
 - python k_fold_train.py
 
 ### plot confusion matrix for all fold ###
