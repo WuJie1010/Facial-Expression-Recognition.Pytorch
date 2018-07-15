@@ -1,5 +1,5 @@
 # Facial-Expression-Recognition.Pytorch
-A CNN based pytorch implementation on facial expression recognition (FER2013 and CK+), achieving 73.112% (state-of-the-art) in FER2013 and 94.64% in CK+
+A CNN based pytorch implementation on facial expression recognition (FER2013 and CK+), achieving 73.112% (state-of-the-art) in FER2013 and 94.64% in CK+ dataset
 
 ## Dependencies ##
 - Python 2.7
@@ -21,7 +21,7 @@ python preprocess_fer2013.py
 - python mainpro_FER.py --model VGG19 --bs 128 --lr 0.01
 
 ### plot confusion matrix ###
--python plot_fer2013_confusion_matrix.py --model VGG19 --split PrivateTest
+- python plot_fer2013_confusion_matrix.py --model VGG19 --split PrivateTest
 
 ###              fer2013 Accurary             ###
 |    Model    | PublicTest_acc | PrivateTest_acc |<Br/>
