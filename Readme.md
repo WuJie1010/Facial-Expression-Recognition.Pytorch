@@ -25,8 +25,8 @@ python preprocess_fer2013.py
 
 ###              fer2013 Accurary             ###
 
-Model：    VGG19       PublicTest_acc：  71.496%     PrivateTest_acc：73.112%     <Br/>
-Model：   Resnet18     PublicTest_acc：  71.190%     PrivateTest_acc：72.973%     
+Model：    VGG19 ;       PublicTest_acc：  71.496% ;     PrivateTest_acc：73.112%     <Br/>
+Model：   Resnet18 ;     PublicTest_acc：  71.190% ;    PrivateTest_acc：72.973%     
 
 ## CK+ Dataset ##
 - The CK+ dataset is an extension of the CK dataset. It contains 327 labeled facial videos,
