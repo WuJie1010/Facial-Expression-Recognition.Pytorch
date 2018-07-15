@@ -25,8 +25,8 @@ python preprocess_fer2013.py
 
 ###              fer2013 Accurary             ###
 
-Model：    VGG19 ;       PublicTest_acc：  71.496% ;     PrivateTest_acc：73.112%     <Br/>
-Model：   Resnet18 ;     PublicTest_acc：  71.190% ;    PrivateTest_acc：72.973%     
+- Model：    VGG19 ;       PublicTest_acc：  71.496% ;     PrivateTest_acc：73.112%     <Br/>
+- Model：   Resnet18 ;     PublicTest_acc：  71.190% ;    PrivateTest_acc：72.973%     
 
 ## CK+ Dataset ##
 - The CK+ dataset is an extension of the CK dataset. It contains 327 labeled facial videos,
@@ -43,6 +43,6 @@ contains a total of 981 facial expressions. we use 10-fold Cross validation in t
 - python plot_CK+_confusion_matrix.py --model VGG19
 
 ###      CK+ Accurary      ###
-Model：    VGG19 ;       Test_acc：   94.646%   <Br/>
-Model：   Resnet18 ;     Test_acc：   94.040%   
+- Model：    VGG19 ;       Test_acc：   94.646%   <Br/>
+- Model：   Resnet18 ;     Test_acc：   94.040%   
 
