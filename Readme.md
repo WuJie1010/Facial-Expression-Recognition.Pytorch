@@ -1,6 +1,10 @@
 # Facial-Expression-Recognition.Pytorch
 A CNN based pytorch implementation on facial expression recognition (FER2013 and CK+), achieving 73.112% (state-of-the-art) in FER2013 and 94.64% in CK+ dataset
 
+## Demos ##
+![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/1.png)
+![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/7.jpg)
+
 ## Dependencies ##
 - Python 2.7
 - Pytorch >=0.2.0
