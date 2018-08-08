@@ -3,7 +3,7 @@ A CNN based pytorch implementation on facial expression recognition (FER2013 and
 
 ## Demos ##
 ![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/1.png)
-![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/7.jpg)
+![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/2.png)
 
 ## Dependencies ##
 - Python 2.7
