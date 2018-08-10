@@ -11,6 +11,11 @@ A CNN based pytorch implementation on facial expression recognition (FER2013 and
 - h5py (Preprocessing)
 - sklearn (plot confusion matrix)
 
+## Visualize for a test image by a pre-trained model ##
+Download the pre-trained model from https://pan.baidu.com/s/18cn5sDO4cjPL2G2V4QInOA and then put it in the "FER2013_VGG19" folder;
+Put the test image (rename as 1.jpg) into the "images" folder, then 
+- python visualize.py
+
 ## FER2013 Dataset ##
 - Dataset from https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data
 Image Properties: 48 x 48 pixels (2304 bytes)
@@ -19,7 +24,7 @@ The training set consists of 28,709 examples. The public test set consists of 3,
 
 ### Preprocessing Fer2013 ###
 - first download the dataset(fer2013.csv) then put it in the "data" folder, then
-python preprocess_fer2013.py
+- python preprocess_fer2013.py
 
 ### Train and Eval model ###
 - python mainpro_FER.py --model VGG19 --bs 128 --lr 0.01
