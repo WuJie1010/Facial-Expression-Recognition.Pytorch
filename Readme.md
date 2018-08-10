@@ -12,8 +12,7 @@ A CNN based pytorch implementation on facial expression recognition (FER2013 and
 - sklearn (plot confusion matrix)
 
 ## Visualize for a test image by a pre-trained model ##
-Download the pre-trained model from https://pan.baidu.com/s/18cn5sDO4cjPL2G2V4QInOA and then put it in the "FER2013_VGG19" folder;
-Put the test image (rename as 1.jpg) into the "images" folder, then 
+- Firstly, download the pre-trained model from https://pan.baidu.com/s/18cn5sDO4cjPL2G2V4QInOA and then put it in the "FER2013_VGG19" folder; Next, Put the test image (rename as 1.jpg) into the "images" folder, then 
 - python visualize.py
 
 ## FER2013 Dataset ##
