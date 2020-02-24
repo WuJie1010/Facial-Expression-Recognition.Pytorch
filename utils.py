@@ -13,7 +13,9 @@ import torch.nn as nn
 import torch.nn.init as init
 from torch.autograd import Function
 
-_, term_width = os.popen('stty size', 'r').read().split()
+# print(os.popen('stty size', 'r').read().split())
+# _, term_width = os.popen('stty size', 'r').read().split()
+_, term_width = [400,400]
 term_width = int(term_width)
 
 TOTAL_BAR_LENGTH = 30.

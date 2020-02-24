@@ -1,8 +1,8 @@
 '''Train CK+ with PyTorch.'''
 # 10 crop for data enhancement
 from __future__ import print_function
+from multiprocessing import freeze_support
 
-import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
@@ -16,6 +16,7 @@ import utils
 from CK import CK
 from torch.autograd import Variable
 from models import *
+import h5py
 
 parser = argparse.ArgumentParser(description='PyTorch CK+ CNN Training')
 parser.add_argument('--model', type=str, default='VGG19', help='CNN architecture')
@@ -33,8 +34,8 @@ best_Test_acc_epoch = 0
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 learning_rate_decay_start = 20  # 50
-learning_rate_decay_every = 1 # 5
-learning_rate_decay_rate = 0.8 # 0.9
+learning_rate_decay_every = 1  # 5
+learning_rate_decay_rate = 0.8  # 0.9
 
 cut_size = 44
 total_epoch = 60
@@ -54,10 +55,10 @@ transform_test = transforms.Compose([
     transforms.Lambda(lambda crops: torch.stack([transforms.ToTensor()(crop) for crop in crops])),
 ])
 
-trainset = CK(split = 'Training', fold = opt.fold, transform=transform_train)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.bs, shuffle=True, num_workers=1)
-testset = CK(split = 'Testing', fold = opt.fold, transform=transform_test)
-testloader = torch.utils.data.DataLoader(testset, batch_size=5, shuffle=False, num_workers=1)
+trainset = CK(split='Training', fold=opt.fold, transform=transform_train)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.bs, shuffle=True, num_workers=0)
+testset = CK(split='Testing', fold=opt.fold, transform=transform_test)
+testloader = torch.utils.data.DataLoader(testset, batch_size=5, shuffle=False, num_workers=0)
 
 # Model
 if opt.model == 'VGG19':
@@ -69,8 +70,8 @@ if opt.resume:
     # Load checkpoint.
     print('==> Resuming from checkpoint..')
     assert os.path.isdir(path), 'Error: no checkpoint directory found!'
-    checkpoint = torch.load(os.path.join(path,'Test_model.t7'))
-    
+    checkpoint = torch.load(os.path.join(path, 'Test_model.t7'))
+
     net.load_state_dict(checkpoint['net'])
     best_Test_acc = checkpoint['best_Test_acc']
     best_Test_acc_epoch = checkpoint['best_Test_acc_epoch']
@@ -84,6 +85,7 @@ if use_cuda:
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=opt.lr, momentum=0.9, weight_decay=5e-4)
 
+
 # Training
 def train(epoch):
     print('\nEpoch: %d' % epoch)
@@ -93,7 +95,7 @@ def train(epoch):
     correct = 0
     total = 0
 
-    if epoch > learning_rate_decay_start and learning_rate_decay_start >= 0:
+    if epoch > learning_rate_decay_start >= 0:
         frac = (epoch - learning_rate_decay_start) // learning_rate_decay_every
         decay_factor = learning_rate_decay_rate ** frac
         current_lr = opt.lr * decay_factor
@@ -102,8 +104,10 @@ def train(epoch):
         current_lr = opt.lr
     print('learning_rate: %s' % str(current_lr))
 
+    # print(trainloader)
 
     for batch_idx, (inputs, targets) in enumerate(trainloader):
+
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         optimizer.zero_grad()
@@ -114,15 +118,16 @@ def train(epoch):
         utils.clip_gradient(optimizer, 0.1)
         optimizer.step()
 
-        train_loss += loss.data[0]
+        train_loss += loss.item()
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
         utils.progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
+                           % (train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
-    Train_acc = 100.*correct/total
+    Train_acc = 100. * correct / total
+
 
 def test(epoch):
     global Test_acc
@@ -132,34 +137,36 @@ def test(epoch):
     PrivateTest_loss = 0
     correct = 0
     total = 0
+
     for batch_idx, (inputs, targets) in enumerate(testloader):
         bs, ncrops, c, h, w = np.shape(inputs)
         inputs = inputs.view(-1, c, h, w)
 
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
-        inputs, targets = Variable(inputs, volatile=True), Variable(targets)
-        outputs = net(inputs)
-        outputs_avg = outputs.view(bs, ncrops, -1).mean(1)  # avg over crops
+            with torch.no_grad():
+                inputs, targets = Variable(inputs), Variable(targets)
+                outputs = net(inputs)
+                outputs_avg = outputs.view(bs, ncrops, -1).mean(1)  # avg over crops
 
         loss = criterion(outputs_avg, targets)
-        PrivateTest_loss += loss.data[0]
+        PrivateTest_loss += loss.item()
         _, predicted = torch.max(outputs_avg.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
         utils.progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (PrivateTest_loss / (batch_idx + 1), 100. * correct / total, correct, total))
+                           % (PrivateTest_loss / (batch_idx + 1), 100. * correct / total, correct, total))
     # Save checkpoint.
-    Test_acc = 100.*correct/total
+    Test_acc = 100. * correct / total
 
     if Test_acc > best_Test_acc:
         print('Saving..')
         print("best_Test_acc: %0.3f" % Test_acc)
         state = {'net': net.state_dict() if use_cuda else net,
-            'best_Test_acc': Test_acc,
-            'best_Test_acc_epoch': epoch,
-        }
+                 'best_Test_acc': Test_acc,
+                 'best_Test_acc_epoch': epoch,
+                 }
         if not os.path.isdir(opt.dataset + '_' + opt.model):
             os.mkdir(opt.dataset + '_' + opt.model)
         if not os.path.isdir(path):
@@ -168,9 +175,18 @@ def test(epoch):
         best_Test_acc = Test_acc
         best_Test_acc_epoch = epoch
 
-for epoch in range(start_epoch, total_epoch):
-    train(epoch)
-    test(epoch)
+
+def main(argv=None):
+    for epoch in range(start_epoch, total_epoch):
+        train(epoch)
+        test(epoch)
+
+
+if __name__ == "__main__":
+    freeze_support()
+    for epoch in range(start_epoch, total_epoch):
+        train(epoch)
+        test(epoch)
 
 print("best_Test_acc: %0.3f" % best_Test_acc)
 print("best_Test_acc_epoch: %d" % best_Test_acc_epoch)
