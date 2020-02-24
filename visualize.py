@@ -39,7 +39,7 @@ inputs = transform_test(img)
 class_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 net = VGG('VGG19')
-checkpoint = torch.load(os.path.join('FER2013_VGG19', 'PrivateTest_model.t7'),map_location='cpu')
+checkpoint = torch.load(os.path.join('FER2013_VGG19', 'PrivateTest_model.t7'))
 net.load_state_dict(checkpoint['net'])
 net.cuda()
 net.eval()
@@ -48,15 +48,12 @@ ncrops, c, h, w = np.shape(inputs)
 
 inputs = inputs.view(-1, c, h, w)
 inputs = inputs.cuda()
-
-with torch.no_grad():
-    inputs = Variable(inputs)
+inputs = Variable(inputs, volatile=True)
 outputs = net(inputs)
 
 outputs_avg = outputs.view(ncrops, -1).mean(0)  # avg over crops
 
-#fix dim
-score = F.softmax(outputs_avg, dim=0)
+score = F.softmax(outputs_avg)
 _, predicted = torch.max(outputs_avg.data, 0)
 
 plt.rcParams['figure.figsize'] = (13.5,5.5)
@@ -91,7 +88,7 @@ plt.tight_layout()
 # show emojis
 
 #plt.show()
-plt.savefig(os.path.join('images/results/1.png'))
+plt.savefig(os.path.join('images/results/l.png'))
 plt.close()
 
 print("The Expression is %s" %str(class_names[int(predicted.cpu().numpy())]))
