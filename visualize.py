@@ -10,11 +10,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 from torch.autograd import Variable
+import argparse
 
 import transforms as transforms
 from skimage import io
 from skimage.transform import resize
 from models import *
+
+parser = argparse.ArgumentParser(description='demo script')
+parser.add_argument('--cpu', help="use this option if you run this script on cpu", action='store_true')
+args = parser.parse_args()
+print(args)
 
 cut_size = 44
 
@@ -39,15 +45,23 @@ inputs = transform_test(img)
 class_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 net = VGG('VGG19')
-checkpoint = torch.load(os.path.join('FER2013_VGG19', 'PrivateTest_model.t7'))
+
+if args.cpu:
+    checkpoint = torch.load(os.path.join('FER2013_VGG19', 'PrivateTest_model.t7'), map_location='cpu')
+else:
+    checkpoint = torch.load(os.path.join('FER2013_VGG19', 'PrivateTest_model.t7'))
 net.load_state_dict(checkpoint['net'])
-net.cuda()
+
 net.eval()
 
 ncrops, c, h, w = np.shape(inputs)
 
 inputs = inputs.view(-1, c, h, w)
-inputs = inputs.cuda()
+
+if not args.cpu:
+    net.cuda()
+    inputs = inputs.cuda()
+
 inputs = Variable(inputs, volatile=True)
 outputs = net(inputs)
 
