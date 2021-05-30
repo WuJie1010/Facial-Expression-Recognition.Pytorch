@@ -55,9 +55,9 @@ transform_test = transforms.Compose([
 ])
 
 trainset = CK(split = 'Training', fold = opt.fold, transform=transform_train)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.bs, shuffle=True, num_workers=1)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.bs, shuffle=True, num_workers=0)
 testset = CK(split = 'Testing', fold = opt.fold, transform=transform_test)
-testloader = torch.utils.data.DataLoader(testset, batch_size=5, shuffle=False, num_workers=1)
+testloader = torch.utils.data.DataLoader(testset, batch_size=5, shuffle=False, num_workers=0)
 
 # Model
 if opt.model == 'VGG19':
@@ -114,7 +114,7 @@ def train(epoch):
         utils.clip_gradient(optimizer, 0.1)
         optimizer.step()
 
-        train_loss += loss.data[0]
+        train_loss += loss.data
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
@@ -143,7 +143,7 @@ def test(epoch):
         outputs_avg = outputs.view(bs, ncrops, -1).mean(1)  # avg over crops
 
         loss = criterion(outputs_avg, targets)
-        PrivateTest_loss += loss.data[0]
+        PrivateTest_loss += loss.data
         _, predicted = torch.max(outputs_avg.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
