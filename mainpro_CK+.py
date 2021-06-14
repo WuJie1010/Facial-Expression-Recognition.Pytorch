@@ -156,15 +156,17 @@ def test(epoch):
     if Test_acc > best_Test_acc:
         print('Saving..')
         print("best_Test_acc: %0.3f" % Test_acc)
+        '''
         state = {'net': net.state_dict() if use_cuda else net,
             'best_Test_acc': Test_acc,
             'best_Test_acc_epoch': epoch,
         }
+        '''
         if not os.path.isdir(opt.dataset + '_' + opt.model):
             os.mkdir(opt.dataset + '_' + opt.model)
         if not os.path.isdir(path):
             os.mkdir(path)
-        torch.save(state, os.path.join(path, 'Test_model.t7'))
+        torch.save(net.state_dict(), os.path.join(path, 'Test_model.t8'))
         best_Test_acc = Test_acc
         best_Test_acc_epoch = epoch
 
