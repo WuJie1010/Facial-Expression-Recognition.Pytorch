@@ -26,7 +26,7 @@ transform_test = transforms.Compose([
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
 
-raw_img = io.imread('images/4.jpeg')
+raw_img = io.imread('images/1.jpg')
 gray = rgb2gray(raw_img)
 gray = resize(gray, (48,48), mode='symmetric').astype(np.uint8)
 
@@ -36,7 +36,8 @@ img = np.concatenate((img, img, img), axis=2)
 img = Image.fromarray(img)
 inputs = transform_test(img)
 
-class_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+# class_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'] for Fer2013
+class_names = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Contempt'] # for CK+
 
 net = VGG('VGG19')
 #checkpoint = torch.load(os.path.join('FER2013_VGG19', 'PrivateTest_model.t7'))
@@ -90,7 +91,7 @@ plt.tight_layout()
 # show emojis
 
 #plt.show()
-plt.savefig(os.path.join('images/results/4.png'))
+plt.savefig(os.path.join('images/results/1.png'))
 plt.close()
 
 print("The Expression is %s" %str(class_names[int(predicted.cpu().numpy())]))
