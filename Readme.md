@@ -2,17 +2,19 @@
 A CNN based pytorch implementation on facial expression recognition (FER2013 and CK+), achieving 73.112% (state-of-the-art) in FER2013 and 94.64% in CK+ dataset
 
 ## Demos ##
-![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/1.png)
-![Image text](https://raw.githubusercontent.com/WuJie1010/Facial-Expression-Recognition.Pytorch/master/demo/2.png)
+![Image text](https://github.com/xmtybb/Facial-Expression-Recognition.Pytorch/blob/xmtybb-patch-1/images/results/3.png)
+![Image text](https://github.com/xmtybb/Facial-Expression-Recognition.Pytorch/blob/xmtybb-patch-1/images/results/4.png)
 
 ## Dependencies ##
-- Python 2.7
-- Pytorch >=0.2.0
+- Python 3.7
+- Pytorch 1.8.1
 - h5py (Preprocessing)
 - sklearn (plot confusion matrix)
 
 ## Visualize for a test image by a pre-trained model ##
-- Firstly, download the pre-trained model from https://drive.google.com/open?id=1Oy_9YmpkSKX1Q8jkOhJbz3Mc7qjyISzU (or https://pan.baidu.com/s/1gCL0TlCwKctAy_5yhzHy5Q,  key: g2d3) and then put it in the "FER2013_VGG19" folder; Next, Put the test image (rename as 1.jpg) into the "images" folder, then 
+- Download the "FER2013_VGG19" pre-trained model from https://drive.google.com/open?id=1Oy_9YmpkSKX1Q8jkOhJbz3Mc7qjyISzU (or https://pan.baidu.com/s/1gCL0TlCwKctAy_5yhzHy5Q,  key: g2d3) 
+- 
+- for CK+/VGG19
 - python visualize.py
 
 ## FER2013 Dataset ##
