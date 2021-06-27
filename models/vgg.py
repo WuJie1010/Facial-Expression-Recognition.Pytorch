@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-
+# from functions.stn import STNFunction, STNFunctionBCHW
 
 cfg = {
     'VGG11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
@@ -18,8 +18,10 @@ class VGG(nn.Module):
         super(VGG, self).__init__()
         self.features = self._make_layers(cfg[vgg_name])
         self.classifier = nn.Linear(512, 7)
+        # self.SpatialTransformer = STNFunction()
 
     def forward(self, x):
+        # out = self.SpatialTransformer(x)
         out = self.features(x)
         out = out.view(out.size(0), -1)
         out = F.dropout(out, p=0.5, training=self.training)

@@ -75,21 +75,25 @@ correct = 0
 total = 0
 all_target = []
 
-for i in xrange(10):
+# for 1 fold 
+for i in range(1):
     print("%d fold" % (i+1))
     path = os.path.join(opt.dataset + '_' + opt.model,  '%d' %(i+1))
-    checkpoint = torch.load(os.path.join(path, 'Test_model.t7'))
+    
+    # checkpoint = torch.load(os.path.join(path, 'Test_model.t7'))
+    # net.load_state_dict(checkpoint['net'])
+    net.load_state_dict(torch.load(os.path.join(path, 'Test_model.t8')))
 
-    net.load_state_dict(checkpoint['net'])
-    net.cuda()
+    
+    # net.cuda()
     net.eval()
     testset = CK(split = 'Testing', fold = i+1, transform=transform_test)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=5, shuffle=False, num_workers=1)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=5, shuffle=False, num_workers=0)
 
     for batch_idx, (inputs, targets) in enumerate(testloader):
         bs, ncrops, c, h, w = np.shape(inputs)
         inputs = inputs.view(-1, c, h, w)
-        inputs, targets = inputs.cuda(), targets.cuda()
+        # inputs, targets = inputs.cuda(), targets.cuda()
         inputs, targets = Variable(inputs, volatile=True), Variable(targets)
         outputs = net(inputs)
         outputs_avg = outputs.view(bs, ncrops, -1).mean(1)  # avg over crops
